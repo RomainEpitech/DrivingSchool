@@ -1,0 +1,210 @@
+[
+  {
+    "model": "accounts.user",
+    "pk": 1,
+    "fields": {
+      "password": "pbkdf2_sha256$600000$uvWihMESp6IhnGJiuEDcqK$QDe+fcY+5sBGM0UHNCbRxwWUf8YH87GVAxy1n9Z08PM=",
+      "last_login": null,
+      "is_superuser": true,
+      "username": "admin",
+      "first_name": "Admin",
+      "last_name": "Principal",
+      "email": "admin@drivingschool.com",
+      "is_staff": true,
+      "is_active": true,
+      "date_joined": "2025-04-01T10:00:00.000Z",
+      "user_type": "admin",
+      "phone_number": "0612345678",
+      "address": "1 rue de l'Administration, 13001 Marseille",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "accounts.user",
+    "pk": 2,
+    "fields": {
+      "password": "pbkdf2_sha256$600000$uvWihMESp6IhnGJiuEDcqK$QDe+fcY+5sBGM0UHNCbRxwWUf8YH87GVAxy1n9Z08PM=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "marie.dupont",
+      "first_name": "Marie",
+      "last_name": "Dupont",
+      "email": "marie.dupont@drivingschool.com",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-04-01T10:10:00.000Z",
+      "user_type": "secretary",
+      "phone_number": "0623456789",
+      "address": "2 rue du Secrétariat, 13001 Marseille",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "accounts.user",
+    "pk": 3,
+    "fields": {
+      "password": "pbkdf2_sha256$600000$uvWihMESp6IhnGJiuEDcqK$QDe+fcY+5sBGM0UHNCbRxwWUf8YH87GVAxy1n9Z08PM=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "jean.martin",
+      "first_name": "Jean",
+      "last_name": "Martin",
+      "email": "jean.martin@drivingschool.com",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-04-01T10:20:00.000Z",
+      "user_type": "secretary",
+      "phone_number": "0634567890",
+      "address": "3 rue des Archives, 13001 Marseille",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "accounts.user",
+    "pk": 4,
+    "fields": {
+      "password": "pbkdf2_sha256$600000$uvWihMESp6IhnGJiuEDcqK$QDe+fcY+5sBGM0UHNCbRxwWUf8YH87GVAxy1n9Z08PM=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "pierre.durand",
+      "first_name": "Pierre",
+      "last_name": "Durand",
+      "email": "pierre.durand@drivingschool.com",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-04-01T11:00:00.000Z",
+      "user_type": "instructor",
+      "phone_number": "0645678901",
+      "address": "10 rue des Instructeurs, 13002 Marseille",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "accounts.user",
+    "pk": 5,
+    "fields": {
+      "password": "pbkdf2_sha256$600000$uvWihMESp6IhnGJiuEDcqK$QDe+fcY+5sBGM0UHNCbRxwWUf8YH87GVAxy1n9Z08PM=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "sophie.moreau",
+      "first_name": "Sophie",
+      "last_name": "Moreau",
+      "email": "sophie.moreau@drivingschool.com",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-04-01T11:10:00.000Z",
+      "user_type": "instructor",
+      "phone_number": "0656789012",
+      "address": "11 rue de la Conduite, 13002 Marseille",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "accounts.user",
+    "pk": 6,
+    "fields": {
+      "password": "pbkdf2_sha256$600000$uvWihMESp6IhnGJiuEDcqK$QDe+fcY+5sBGM0UHNCbRxwWUf8YH87GVAxy1n9Z08PM=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "lucas.petit",
+      "first_name": "Lucas",
+      "last_name": "Petit",
+      "email": "lucas.petit@example.com",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-04-01T14:00:00.000Z",
+      "user_type": "student",
+      "phone_number": "0667890123",
+      "address": "20 rue des Étudiants, 13003 Marseille",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "accounts.user",
+    "pk": 7,
+    "fields": {
+      "password": "pbkdf2_sha256$600000$uvWihMESp6IhnGJiuEDcqK$QDe+fcY+5sBGM0UHNCbRxwWUf8YH87GVAxy1n9Z08PM=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "emma.leroy",
+      "first_name": "Emma",
+      "last_name": "Leroy",
+      "email": "emma.leroy@example.com",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-04-01T14:10:00.000Z",
+      "user_type": "student",
+      "phone_number": "0678901234",
+      "address": "21 rue de l'Apprentissage, 13003 Marseille",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "accounts.user",
+    "pk": 8,
+    "fields": {
+      "password": "pbkdf2_sha256$600000$uvWihMESp6IhnGJiuEDcqK$QDe+fcY+5sBGM0UHNCbRxwWUf8YH87GVAxy1n9Z08PM=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "maxime.roux",
+      "first_name": "Maxime",
+      "last_name": "Roux",
+      "email": "maxime.roux@example.com",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-04-01T14:20:00.000Z",
+      "user_type": "student",
+      "phone_number": "0689012345",
+      "address": "22 avenue du Code, 13003 Marseille",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "accounts.instructor",
+    "pk": 1,
+    "fields": {
+      "user": 4,
+      "specialization": "Conduite sur autoroute et en ville"
+    }
+  },
+  {
+    "model": "accounts.instructor",
+    "pk": 2,
+    "fields": {
+      "user": 5,
+      "specialization": "Conduite économique et écologique"
+    }
+  },
+  {
+    "model": "accounts.student",
+    "pk": 1,
+    "fields": {
+      "user": 6,
+      "remaining_hours": 20
+    }
+  },
+  {
+    "model": "accounts.student",
+    "pk": 2,
+    "fields": {
+      "user": 7,
+      "remaining_hours": 15
+    }
+  },
+  {
+    "model": "accounts.student",
+    "pk": 3,
+    "fields": {
+      "user": 8,
+      "remaining_hours": 10
+    }
+  }
+]

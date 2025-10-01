@@ -1,0 +1,86 @@
+[
+  {
+    "model": "scheduling.appointment",
+    "pk": 1,
+    "fields": {
+      "student": 1,
+      "instructor": 1,
+      "date": "2025-04-10",
+      "start_time": "09:00:00",
+      "end_time": "11:00:00",
+      "location": "Parking du Carrefour - Marseille",
+      "duration": 2,
+      "notes": "Première leçon - prise en main du véhicule et manœuvres de base"
+    }
+  },
+  {
+    "model": "scheduling.appointment",
+    "pk": 2,
+    "fields": {
+      "student": 1,
+      "instructor": 1,
+      "date": "2025-04-12",
+      "start_time": "14:00:00",
+      "end_time": "16:00:00",
+      "location": "Centre-ville de Marseille",
+      "duration": 2,
+      "notes": "Circulation en ville, respect des priorités"
+    }
+  },
+  {
+    "model": "scheduling.appointment",
+    "pk": 3,
+    "fields": {
+      "student": 2,
+      "instructor": 2,
+      "date": "2025-04-11",
+      "start_time": "10:00:00",
+      "end_time": "12:00:00",
+      "location": "École de conduite - départ",
+      "duration": 2,
+      "notes": "Initiation à la conduite économique"
+    }
+  },
+  {
+    "model": "scheduling.appointment",
+    "pk": 4,
+    "fields": {
+      "student": 2,
+      "instructor": 2,
+      "date": "2025-04-13",
+      "start_time": "09:00:00",
+      "end_time": "11:00:00",
+      "location": "Autoroute A7 - Marseille",
+      "duration": 2,
+      "notes": "Conduite sur autoroute et insertion"
+    }
+  },
+  {
+    "model": "scheduling.appointment",
+    "pk": 5,
+    "fields": {
+      "student": 3,
+      "instructor": 1,
+      "date": "2025-04-10",
+      "start_time": "16:00:00",
+      "end_time": "18:00:00",
+      "location": "Zone industrielle - Marseille",
+      "duration": 2,
+      "notes": "Manœuvres de stationnement et demi-tour"
+    }
+  },
+  {
+    "model": "scheduling.appointment",
+    "pk": 6,
+    "fields": {
+      "student": 3,
+      "instructor": 2,
+      "date": "2025-04-14",
+      "start_time": "13:00:00",
+      "end_time": "15:00:00",
+      "location": "Centre-ville de Marseille",
+      "duration": 2,
+      "notes": "Circulation dense et carrefours complexes"
+    }
+  }
+]

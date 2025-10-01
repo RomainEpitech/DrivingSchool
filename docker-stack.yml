@@ -1,0 +1,167 @@
+version: '3.8'
+
+services:
+  web:
+    image: driving_school_app:latest
+    build:
+      context: .
+    env_file:
+      - .env
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 10s
+      restart_policy:
+        condition: on-failure
+    ports:
+      - published: 8000
+        target: 8000
+        protocol: tcp
+        mode: host
+    networks:
+      - driving_school_network
+    environment:
+      - DEBUG=${DEBUG}
+      - ENV=${ENV}
+      - SECRET_KEY=${SECRET_KEY}
+    volumes:
+      - ./app:/app/app
+      - ./manage.py:/app/manage.py
+      - sqlite_data:/app/data
+      - logs_volume:/app/data/logs
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  nginx:
+    image: nginx:latest
+    ports:
+      - published: 80
+        target: 80
+        protocol: tcp
+        mode: host
+    deploy:
+      replicas: 2
+      update_config:
+        parallelism: 1
+        delay: 10s
+      restart_policy:
+        condition: on-failure
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - static_volume:/app/static
+      - media_volume:/app/media
+    networks:
+      - driving_school_network
+    depends_on:
+      - web
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - published: 9090
+        target: 9090
+        protocol: tcp
+        mode: host
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    networks:
+      - driving_school_network
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - published: 3000
+        target: 3000
+        protocol: tcp
+        mode: host
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+    volumes:
+      - grafana_data:/var/lib/grafana
+    networks:
+      - driving_school_network
+    depends_on:
+      - prometheus
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.16.3
+    ports:
+      - published: 9200
+        target: 9200
+        protocol: tcp
+        mode: host
+    environment:
+      - discovery.type=single-node
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
+    networks:
+      - driving_school_network
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:7.16.3
+    ports:
+      - published: 5044
+        target: 5044
+        protocol: tcp
+        mode: host
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+    volumes:
+      - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml
+      - ./logstash/pipeline:/usr/share/logstash/pipeline
+    networks:
+      - driving_school_network
+    depends_on:
+      - elasticsearch
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.16.3
+    ports:
+      - published: 5601
+        target: 5601
+        protocol: tcp
+        mode: host
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    networks:
+      - driving_school_network
+    depends_on:
+      - elasticsearch
+
+networks:
+  driving_school_network:
+    driver: overlay
+    attachable: true
+
+volumes:
+  sqlite_data:
+  logs_volume:
+  static_volume:
+  media_volume:
+  prometheus_data:
+  grafana_data:
+  elasticsearch_data:

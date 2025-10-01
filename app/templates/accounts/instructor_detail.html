@@ -1,0 +1,254 @@
+
+{% extends 'base.html' %}
+
+{% block title %}Détail de l'instructeur - My Driving School{% endblock %}
+
+{% block content %}
+<div class="bg-white shadow overflow-hidden sm:rounded-lg">
+    <div class="px-4 py-5 sm:px-6 bg-gradient-to-r from-primary-700 to-primary-800 text-white">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+            <div>
+                <h3 class="text-2xl leading-6 font-medium font-heading">
+                    Profil de l'instructeur
+                </h3>
+                <p class="mt-1 max-w-2xl text-sm text-primary-100">
+                    Informations détaillées sur l'instructeur
+                </p>
+            </div>
+            {% if user.user_type in 'secretary,admin' %}
+            <div class="mt-4 md:mt-0">
+                <a href="{% url 'instructor_edit' instructor.pk %}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+                    <i class="fas fa-edit mr-2"></i>
+                    Modifier
+                </a>
+                <a href="{% url 'instructor_archive' instructor.pk %}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                    <i class="fas fa-archive mr-2"></i>
+                    Archiver
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="border-t border-gray-200">
+        <dl>
+            <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt class="text-sm font-medium text-gray-500">
+                    Nom complet
+                </dt>
+                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                    {{ instructor.user.first_name }} {{ instructor.user.last_name }}
+                </dd>
+            </div>
+            <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt class="text-sm font-medium text-gray-500">
+                    Email
+                </dt>
+                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                    {{ instructor.user.email }}
+                </dd>
+            </div>
+            <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt class="text-sm font-medium text-gray-500">
+                    Téléphone
+                </dt>
+                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                    {{ instructor.user.phone_number }}
+                </dd>
+            </div>
+            <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt class="text-sm font-medium text-gray-500">
+                    Adresse
+                </dt>
+                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                    {{ instructor.user.address }}
+                </dd>
+            </div>
+            <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt class="text-sm font-medium text-gray-500">
+                    Spécialisation
+                </dt>
+                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                    {{ instructor.specialization }}
+                </dd>
+            </div>
+            <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt class="text-sm font-medium text-gray-500">
+                    Date d'inscription
+                </dt>
+                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                    {{ instructor.user.date_joined|date:"d/m/Y" }}
+                </dd>
+            </div>
+        </dl>
+    </div>
+    
+    <!-- Actions rapides -->
+    <div class="px-4 py-5 sm:px-6 border-t border-gray-200">
+        <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">
+            Actions
+        </h3>
+        
+        <div class="flex flex-wrap gap-3">
+            <a href="{% url 'appointment_list' %}?instructor={{ instructor.id }}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+                <i class="fas fa-calendar-alt mr-2"></i>
+                Voir les rendez-vous
+            </a>
+            
+            <a href="{% url 'calendar' %}?instructor={{ instructor.id }}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                <i class="fas fa-calendar-week mr-2"></i>
+                Voir le calendrier
+            </a>
+            
+            {% if user.user_type in 'secretary,admin' %}
+            <a href="{% url 'appointment_create' %}?instructor={{ instructor.id }}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-secondary-600 hover:bg-secondary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-secondary-500">
+                <i class="fas fa-calendar-plus mr-2"></i>
+                Ajouter un rendez-vous
+            </a>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- Élèves suivis -->
+    <div class="px-4 py-5 sm:px-6 border-t border-gray-200">
+      <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">
+          Élèves suivis
+      </h3>
+      
+      <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+              <thead class="bg-gray-50">
+                  <tr>
+                      <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Nom
+                      </th>
+                      <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Contact
+                      </th>
+                      <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Heures restantes
+                      </th>
+                      <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Dernier cours
+                      </th>
+                      <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Actions
+                      </th>
+                  </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200">
+                  {% for student in students %}
+                  <tr>
+                      <td class="px-6 py-4 whitespace-nowrap">
+                          {{ student.user.first_name }} {{ student.user.last_name }}
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap">
+                          {{ student.user.email }}<br>
+                          {{ student.user.phone_number }}
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap">
+                          {{ student.remaining_hours }}
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap">
+                          {% if student.last_appointment %}
+                          {{ student.last_appointment.date|date:"d/m/Y" }}<br>
+                          {{ student.last_appointment.start_time }} - {{ student.last_appointment.end_time }}
+                          {% else %}
+                          Aucun cours
+                          {% endif %}
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                          <a href="{% url 'student_detail' student.pk %}" class="text-primary-600 hover:text-primary-900 mr-3">
+                              <i class="fas fa-eye"></i>
+                          </a>
+                          {% comment %} {% if user.user_type in 'instructor,secretary,admin' %}
+                          <a href="{% url 'student_edit' student.pk %}" class="text-indigo-600 hover:text-indigo-900 mr-3">
+                              <i class="fas fa-edit"></i>
+                          </a>
+                          <a href="{% url 'student_delete' student.pk %}" class="text-red-600 hover:text-red-900">
+                              <i class="fas fa-trash"></i>
+                          </a>
+                          {% endif %} {% endcomment %}
+                      </td>
+                  </tr>
+                  {% empty %}
+                  <tr>
+                      <td colspan="5" class="px-6 py-4 whitespace-nowrap text-center text-gray-500">
+                          Aucun élève trouvé pour cet instructeur
+                      </td>
+                  </tr>
+                  {% endfor %}
+              </tbody>
+          </table>
+      </div>
+    </div>
+    
+    <!-- Prochains rendez-vous -->
+    <div class="px-4 py-5 sm:px-6 border-t border-gray-200">
+        <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">
+            Prochains rendez-vous
+        </h3>
+        
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Date
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Horaire
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Élève
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Lieu
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Actions
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    {% for appointment in upcoming_appointments %}
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            {{ appointment.date|date:"d/m/Y" }}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            {{ appointment.start_time }} - {{ appointment.end_time }}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            {{ appointment.student.user.first_name }} {{ appointment.student.user.last_name }}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            {{ appointment.location }}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                            <a href="{% url 'appointment_detail' appointment.pk %}" class="text-primary-600 hover:text-primary-900 mr-3">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                            {% if user.user_type in 'instructor,secretary,admin' %}
+                            <a href="{% url 'appointment_edit' appointment.pk %}" class="text-indigo-600 hover:text-indigo-900 mr-3">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <a href="{% url 'appointment_delete' appointment.pk %}" class="text-red-600 hover:text-red-900">
+                                <i class="fas fa-trash"></i>
+                            </a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="px-6 py-4 whitespace-nowrap text-center text-gray-500">
+                            Aucun rendez-vous à venir
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

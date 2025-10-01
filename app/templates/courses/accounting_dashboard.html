@@ -1,0 +1,271 @@
+{% extends 'base.html' %}
+
+{% block title %}Comptabilité - My Driving School{% endblock %}
+
+{% block extra_css %}
+<style>
+    .stats-card {
+        @apply bg-white rounded-lg shadow border border-gray-200 p-6 hover:shadow-md transition-shadow duration-300;
+    }
+    
+    .stats-label {
+        @apply text-sm text-gray-500 font-medium;
+    }
+    
+    .stats-value {
+        @apply text-3xl font-bold text-gray-900 mt-1;
+    }
+    
+    .stats-trend {
+        @apply flex items-center text-sm mt-2;
+    }
+    
+    .stats-trend-up {
+        @apply text-green-600;
+    }
+    
+    .stats-trend-down {
+        @apply text-red-600;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="bg-white shadow overflow-hidden sm:rounded-lg">
+    <div class="px-4 py-5 sm:px-6 bg-gradient-to-r from-primary-700 to-primary-800 text-white">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+            <div>
+                <h3 class="text-2xl leading-6 font-medium font-heading">
+                    Espace Comptabilité
+                </h3>
+                <p class="mt-1 max-w-2xl text-sm text-primary-100">
+                    Tableau de bord financier et rapports
+                </p>
+            </div>
+            <div class="mt-4 md:mt-0">
+                <a href="{% url 'purchase_history' %}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-primary-700 bg-white hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white">
+                    <i class="fas fa-history mr-2"></i>
+                    Historique complet
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="px-4 py-5 sm:px-6">
+        <!-- Cartes de statistiques -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+            <div class="stats-card">
+                <p class="stats-label">Chiffre d'affaires total</p>
+                <p class="stats-value">{{ total_revenue }} €</p>
+                <div class="stats-trend stats-trend-up">
+                    <i class="fas fa-chart-line mr-1"></i>
+                    <span>Total depuis le début</span>
+                </div>
+            </div>
+            
+            <div class="stats-card">
+                <p class="stats-label">Chiffre d'affaires mensuel</p>
+                <p class="stats-value">{{ monthly_revenue }} €</p>
+                <div class="stats-trend stats-trend-up">
+                    <i class="fas fa-calendar-alt mr-1"></i>
+                    <span>Mois en cours</span>
+                </div>
+            </div>
+            
+            <div class="stats-card">
+                <p class="stats-label">Nombre de transactions</p>
+                <p class="stats-value">{{ all_purchases.count }}</p>
+                <div class="stats-trend">
+                    <i class="fas fa-shopping-cart mr-1"></i>
+                    <span>Total des achats</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Graphique des revenus -->
+        <div class="mb-8">
+            <h2 class="text-lg font-bold text-gray-900 mb-4">Évolution des revenus</h2>
+            <div class="bg-white p-4 rounded-lg shadow border border-gray-200" style="height: 300px;">
+                <canvas id="revenueChart"></canvas>
+            </div>
+        </div>
+        
+        <!-- Statistiques par forfait -->
+        <div class="mb-8">
+            <h2 class="text-lg font-bold text-gray-900 mb-4">Ventes par forfait</h2>
+            <div class="bg-white rounded-lg shadow overflow-hidden border border-gray-200">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Forfait
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Nombre de ventes
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Total des ventes
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Part des ventes
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        {% for stat in package_stats %}
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                {{ stat.package__name }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                {{ stat.count }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                {{ stat.total }} €
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                {% widthratio stat.total total_revenue 100 %}%
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4" class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-500">
+                                Aucune donnée disponible
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Dernières transactions -->
+        <div>
+            <h2 class="text-lg font-bold text-gray-900 mb-4">Dernières transactions</h2>
+            <div class="bg-white rounded-lg shadow overflow-hidden border border-gray-200">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Date
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Élève
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Forfait
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Heures ajoutées
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Montant
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        {% for purchase in all_purchases|slice:":10" %}
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                {{ purchase.purchase_date|date:"d/m/Y H:i" }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <div class="flex-shrink-0 h-8 w-8">
+                                        <div class="h-8 w-8 rounded-full bg-primary-100 flex items-center justify-center">
+                                            <span class="text-primary-800 font-medium text-xs">{{ purchase.student.user.first_name|slice:":1" }}{{ purchase.student.user.last_name|slice:":1" }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="ml-3">
+                                        <div class="text-sm font-medium text-gray-900">
+                                            {{ purchase.student.user.first_name }} {{ purchase.student.user.last_name }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                {{ purchase.package.name }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                {{ purchase.hours_added }} heures
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                {{ purchase.amount_paid }} €
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                          <td colspan="5" class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-500">
+                              Aucune transaction trouvée
+                          </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <div class="bg-gray-50 px-6 py-3 text-right">
+                    <a href="{% url 'purchase_history' %}" class="text-sm font-medium text-primary-600 hover:text-primary-500">
+                        Voir toutes les transactions <i class="fas fa-arrow-right ml-1"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Données pour le graphique
+    var months = {{ months|safe }};
+    var revenues = {{ revenues|safe }};
+
+    // Création du graphique
+    var ctx = document.getElementById('revenueChart').getContext('2d');
+    var revenueChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: months,
+                datasets: [{
+                label: 'Revenus (€)',
+                data: revenues,
+                backgroundColor: 'rgba(14, 165, 233, 0.2)',
+                borderColor: 'rgba(14, 165, 233, 1)',
+                borderWidth: 2,
+                tension: 0.3,
+                pointBackgroundColor: 'rgba(14, 165, 233, 1)',
+                pointRadius: 4,
+                pointHoverRadius: 6
+            }]
+        },
+        options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+            y: {
+                beginAtZero: true,
+                ticks: {
+                    callback: function(value) {
+                        return value + ' €';
+                    }
+                }
+            }
+        },
+        plugins: {
+            tooltip: {
+                callbacks: {
+                    label: function(context) {
+                        return context.dataset.label + ': ' + context.raw + ' €';
+                    }
+                }
+            },
+            legend: {
+                display: false
+            }
+        } 
+    }
+  });
+});
+</script>
+{% endblock %}

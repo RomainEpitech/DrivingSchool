@@ -1,0 +1,159 @@
+
+{% extends 'base.html' %}
+
+{% block title %}Mon Profil - My Driving School{% endblock %}
+
+{% block content %}
+<div class="bg-white shadow overflow-hidden sm:rounded-lg">
+    <div class="px-4 py-5 sm:px-6 bg-gradient-to-r from-primary-700 to-primary-800 text-white">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+            <div>
+                <h3 class="text-2xl leading-6 font-medium font-heading">
+                    Mon Profil
+                </h3>
+                <p class="mt-1 max-w-2xl text-sm text-primary-100">
+                    Informations personnelles et détails du compte.
+                </p>
+            </div>
+            {% if user.user_type == 'student' %}
+                <div class="mt-4 md:mt-0 bg-white text-primary-800 py-2 px-4 rounded-lg shadow">
+                    <span class="font-semibold">Heures restantes :</span>
+                    <span class="text-xl font-bold">{{ user.student_profile.remaining_hours }}</span>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    <div class="border-t border-gray-200">
+        <dl>
+            <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt class="text-sm font-medium text-gray-500">
+                    Nom complet
+                </dt>
+                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                    {{ user.first_name }} {{ user.last_name }}
+                </dd>
+            </div>
+            <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt class="text-sm font-medium text-gray-500">
+                    Nom d'utilisateur
+                </dt>
+                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                    {{ user.username }}
+                </dd>
+            </div>
+            <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt class="text-sm font-medium text-gray-500">
+                    Type de compte
+                </dt>
+                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                    {% if user.user_type == 'admin' %}
+                        Administrateur
+                    {% elif user.user_type == 'secretary' %}
+                        Secrétaire
+                    {% elif user.user_type == 'instructor' %}
+                        Instructeur
+                    {% elif user.user_type == 'student' %}
+                        Élève
+                    {% endif %}
+                </dd>
+            </div>
+            <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt class="text-sm font-medium text-gray-500">
+                    Email
+                </dt>
+                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                    {{ user.email }}
+                </dd>
+            </div>
+            <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt class="text-sm font-medium text-gray-500">
+                    Téléphone
+                </dt>
+                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                    {{ user.phone_number }}
+                </dd>
+            </div>
+            <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt class="text-sm font-medium text-gray-500">
+                    Adresse
+                </dt>
+                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                    {{ user.address }}
+                </dd>
+            </div>
+            
+            {% if user.user_type == 'instructor' %}
+            <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt class="text-sm font-medium text-gray-500">
+                    Spécialisation
+                </dt>
+                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                    {{ user.instructor_profile.specialization }}
+                </dd>
+            </div>
+            {% endif %}
+            
+            {% if user.user_type == 'student' %}
+            <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt class="text-sm font-medium text-gray-500">
+                    Heures restantes
+                </dt>
+                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                    {{ user.student_profile.remaining_hours }}
+                </dd>
+            </div>
+            {% endif %}
+        </dl>
+    </div>
+    
+    <div class="px-4 py-5 sm:px-6 border-t border-gray-200">
+        <h3 class="text-lg leading-6 font-medium text-gray-900">
+            Actions disponibles
+        </h3>
+        
+        <div class="mt-4 flex flex-wrap gap-3">
+            <a href="{% url 'appointment_list' %}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+                <i class="fas fa-calendar-alt mr-2"></i>
+                Mes rendez-vous
+            </a>
+            
+            {% if user.user_type == 'student' %}
+            <a href="{% url 'package_list' %}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-secondary-600 hover:bg-secondary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-secondary-500">
+                <i class="fas fa-shopping-cart mr-2"></i>
+                Voir les forfaits
+            </a>
+            {% endif %}
+            
+            {% if user.user_type == 'instructor' %}
+            <a href="{% url 'student_list' %}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-secondary-600 hover:bg-secondary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-secondary-500">
+                <i class="fas fa-users mr-2"></i>
+                Mes élèves
+            </a>
+            {% endif %}
+            
+            {% if user.user_type in 'secretary,admin' %}
+            <a href="{% url 'student_list' %}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-secondary-600 hover:bg-secondary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-secondary-500">
+                <i class="fas fa-user-graduate mr-2"></i>
+                Élèves
+            </a>
+            
+            <a href="{% url 'instructor_list' %}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                <i class="fas fa-chalkboard-teacher mr-2"></i>
+                Instructeurs
+            </a>
+            
+            <a href="{% url 'purchase_history' %}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500">
+                <i class="fas fa-receipt mr-2"></i>
+                Historique des achats
+            </a>
+            {% endif %}
+            
+            <a href="{% url 'calendar' %}" class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+                <i class="fas fa-calendar-week mr-2"></i>
+                Calendrier
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+```

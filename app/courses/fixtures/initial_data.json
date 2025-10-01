@@ -1,0 +1,86 @@
+[
+  {
+    "model": "courses.coursepackage",
+    "pk": 1,
+    "fields": {
+      "name": "Forfait Découverte",
+      "hours": 10,
+      "price": "500.00",
+      "description": "Forfait de 10 heures idéal pour les débutants ou pour compléter une formation précédente."
+    }
+  },
+  {
+    "model": "courses.coursepackage",
+    "pk": 2,
+    "fields": {
+      "name": "Forfait Classique",
+      "hours": 20,
+      "price": "900.00",
+      "description": "Notre forfait standard de 20 heures pour une formation complète au permis B."
+    }
+  },
+  {
+    "model": "courses.coursepackage",
+    "pk": 3,
+    "fields": {
+      "name": "Forfait Premium",
+      "hours": 30,
+      "price": "1300.00",
+      "description": "Forfait complet de 30 heures avec des séances de conduite en conditions variées pour une préparation optimale."
+    }
+  },
+  {
+    "model": "courses.coursepackage",
+    "pk": 4,
+    "fields": {
+      "name": "Heure supplémentaire",
+      "hours": 1,
+      "price": "55.00",
+      "description": "Heure de conduite supplémentaire à l'unité."
+    }
+  },
+  {
+    "model": "courses.purchase",
+    "pk": 1,
+    "fields": {
+      "student": 1,
+      "package": 2,
+      "purchase_date": "2025-04-01T14:30:00.000Z",
+      "hours_added": 20,
+      "amount_paid": "900.00"
+    }
+  },
+  {
+    "model": "courses.purchase",
+    "pk": 2,
+    "fields": {
+      "student": 2,
+      "package": 1,
+      "purchase_date": "2025-04-01T14:45:00.000Z",
+      "hours_added": 10,
+      "amount_paid": "500.00"
+    }
+  },
+  {
+    "model": "courses.purchase",
+    "pk": 3,
+    "fields": {
+      "student": 2,
+      "package": 4,
+      "purchase_date": "2025-04-02T10:00:00.000Z",
+      "hours_added": 5,
+      "amount_paid": "275.00"
+    }
+  },
+  {
+    "model": "courses.purchase",
+    "pk": 4,
+    "fields": {
+      "student": 3,
+      "package": 1,
+      "purchase_date": "2025-04-02T11:00:00.000Z",
+      "hours_added": 10,
+      "amount_paid": "500.00"
+    }
+  }
+]

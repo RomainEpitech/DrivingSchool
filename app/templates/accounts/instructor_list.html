@@ -1,0 +1,163 @@
+
+{% extends 'base.html' %}
+
+{% block title %}Liste des Instructeurs - My Driving School{% endblock %}
+
+{% block content %}
+<div class="bg-white shadow overflow-hidden sm:rounded-lg">
+    <div class="px-4 py-5 sm:px-6 bg-gradient-to-r from-primary-700 to-primary-800 text-white">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+            <div>
+                <h3 class="text-2xl leading-6 font-medium font-heading">
+                    Liste des Instructeurs
+                </h3>
+                <p class="mt-1 max-w-2xl text-sm text-primary-100">
+                    Gestion des moniteurs de conduite
+                </p>
+            </div>
+            {% if user.user_type in 'secretary,admin' %}
+            <div class="mt-4 md:mt-0">
+                <a href="{% url 'instructor_create' %}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-primary-700 bg-white hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white">
+                    <i class="fas fa-user-plus mr-2"></i>
+                    Ajouter un instructeur
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="bg-white">
+        <div class="py-4 px-4">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
+                <div class="mb-4 md:mb-0">
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fas fa-search text-gray-400"></i>
+                        </div>
+                        <input id="search" class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-primary-500 focus:border-primary-500 sm:text-sm" placeholder="Rechercher un instructeur..." type="search">
+                    </div>
+                </div>
+                <div class="flex flex-wrap gap-2">
+                    <select id="filter-specialization" class="block w-full md:w-auto pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm rounded-md">
+                        <option value="">Toutes les spécialisations</option>
+                        <option value="Conduite sur autoroute">Conduite sur autoroute</option>
+                        <option value="Conduite économique">Conduite économique</option>
+                        <option value="Conduite urbaine">Conduite urbaine</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="table-responsive shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Instructeur
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Contact
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Spécialisation
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Statut
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Actions
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        {% for instructor in instructors %}
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <div class="flex-shrink-0 h-10 w-10">
+                                        <div class="h-10 w-10 rounded-full bg-secondary-100 flex items-center justify-center">
+                                            <span class="text-secondary-800 font-medium">{{ instructor.user.first_name|slice:":1" }}{{ instructor.user.last_name|slice:":1" }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="ml-4">
+                                        <div class="text-sm font-medium text-gray-900">
+                                            {{ instructor.user.first_name }} {{ instructor.user.last_name }}
+                                        </div>
+                                        <div class="text-sm text-gray-500">
+                                            {{ instructor.user.username }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm text-gray-900">{{ instructor.user.email }}</div>
+                                <div class="text-sm text-gray-500">{{ instructor.user.phone_number }}</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm text-gray-900">{{ instructor.specialization }}</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                    Actif
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                <a href="{% url 'instructor_detail' instructor.pk %}" class="text-primary-600 hover:text-primary-900 mr-3">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                {% if user.user_type in 'secretary,admin' %}
+                                <a href="#" class="text-indigo-600 hover:text-indigo-900 mr-3">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <a href="#" class="text-red-600 hover:text-red-900">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="px-6 py-4 whitespace-nowrap text-center text-gray-500">
+                                Aucun instructeur trouvé
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.getElementById('search');
+        const filterSpecialization = document.getElementById('filter-specialization');
+        const tableRows = document.querySelectorAll('tbody tr');
+        
+        searchInput.addEventListener('input', filterTable);
+        filterSpecialization.addEventListener('change', filterTable);
+        
+        function filterTable() {
+            const searchTerm = searchInput.value.toLowerCase();
+            const specializationFilter = filterSpecialization.value.toLowerCase();
+            
+            tableRows.forEach(row => {
+                const instructorName = row.querySelector('td:first-child').textContent.toLowerCase();
+                const specialization = row.querySelector('td:nth-child(3)').textContent.toLowerCase();
+                
+                const matchesSearch = instructorName.includes(searchTerm);
+                const matchesSpecialization = !specializationFilter || specialization.includes(specializationFilter);
+                
+                if (matchesSearch && matchesSpecialization) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+    });
+</script>
+{% endblock %}
+```

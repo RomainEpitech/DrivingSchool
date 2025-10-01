@@ -1,0 +1,189 @@
+
+{% extends 'base.html' %}
+
+{% block title %}
+{% if appointment %}Modifier le Rendez-vous{% else %}Ajouter un Rendez-vous{% endif %} - My Driving School
+{% endblock %}
+
+{% block content %}
+<div class="bg-white shadow overflow-hidden sm:rounded-lg">
+    <div class="px-4 py-5 sm:px-6 bg-gradient-to-r from-primary-700 to-primary-800 text-white">
+        <h3 class="text-2xl leading-6 font-medium font-heading">
+            {% if appointment %}Modifier le Rendez-vous{% else %}Ajouter un Rendez-vous{% endif %}
+        </h3>
+        <p class="mt-1 max-w-2xl text-sm text-primary-100">
+            {% if appointment %}Modifiez les détails du rendez-vous.{% else %}Planifiez un nouveau rendez-vous.{% endif %}
+        </p>
+    </div>
+    
+    <div class="px-4 py-5 sm:px-6">
+        <form method="post" class="space-y-6">
+            {% csrf_token %}
+            
+            {% if form.non_field_errors %}
+            <div class="rounded-md bg-red-50 p-4">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <i class="fas fa-exclamation-circle text-red-400"></i>
+                    </div>
+                    <div class="ml-3">
+                        <h3 class="text-sm font-medium text-red-800">
+                            Des erreurs sont survenues
+                        </h3>
+                        <div class="mt-2 text-sm text-red-700">
+                            <ul class="list-disc pl-5 space-y-1">
+                                {% for error in form.non_field_errors %}
+                                <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            
+            <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+                {% if user.user_type == 'student' %}
+                <input type="hidden" name="student" value="{{ user.student_profile.id }}">
+                {% else %}
+                <div class="sm:col-span-3">
+                    <label for="student" class="block text-sm font-medium text-gray-700">
+                        Élève
+                    </label>
+                    <div class="mt-1">
+                        <select id="student" name="student" class="shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 rounded-md">
+                            <option value="">Sélectionnez un élève</option>
+                            {% for student in students %}
+                            <option value="{{ student.id }}" {% if appointment and appointment.student.id == student.id %}selected{% endif %}>
+                                {{ student.user.first_name }} {{ student.user.last_name }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                        {% if form.student.errors %}
+                        <p class="mt-2 text-sm text-red-600">{{ form.student.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+                
+                {% if user.user_type == 'instructor' %}
+                <input type="hidden" name="instructor" value="{{ user.instructor_profile.id }}">
+                {% else %}
+                <div class="sm:col-span-3">
+                    <label for="instructor" class="block text-sm font-medium text-gray-700">
+                        Instructeur
+                    </label>
+                    <div class="mt-1">
+                        <select id="instructor" name="instructor" class="shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 rounded-md">
+                            <option value="">Sélectionnez un instructeur</option>
+                            {% for instructor in instructors %}
+                            <option value="{{ instructor.id }}" {% if appointment and appointment.instructor.id == instructor.id %}selected{% endif %}>
+                                {{ instructor.user.first_name }} {{ instructor.user.last_name }} - {{ instructor.specialization }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                        {% if form.instructor.errors %}
+                        <p class="mt-2 text-sm text-red-600">{{ form.instructor.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+                
+                <div class="sm:col-span-3">
+                    <label for="date" class="block text-sm font-medium text-gray-700">
+                        Date
+                    </label>
+                    <div class="mt-1">
+                        <input type="date" name="date" id="date" value="{% if appointment %}{{ appointment.date|date:'Y-m-d' }}{% endif %}" required 
+                               class="shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 rounded-md">
+                        {% if form.date.errors %}
+                        <p class="mt-2 text-sm text-red-600">{{ form.date.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="sm:col-span-3">
+                    <label for="start_time" class="block text-sm font-medium text-gray-700">
+                        Heure de début
+                    </label>
+                    <div class="mt-1">
+                        <input type="time" name="start_time" id="start_time" value="{% if appointment %}{{ appointment.start_time|time:'H:i' }}{% endif %}" required 
+                               class="shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 rounded-md">
+                        {% if form.start_time.errors %}
+                        <p class="mt-2 text-sm text-red-600">{{ form.start_time.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="sm:col-span-3">
+                    <label for="duration" class="block text-sm font-medium text-gray-700">
+                        Durée (heures)
+                    </label>
+                    <div class="mt-1">
+                        <select id="duration" name="duration" required class="shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 rounded-md">
+                            <option value="1" {% if appointment and appointment.duration == 1 %}selected{% endif %}>1 heure</option>
+                            <option value="2" {% if appointment and appointment.duration == 2 %}selected{% endif %} {% if not appointment %}selected{% endif %}>2 heures</option>
+                            <option value="3" {% if appointment and appointment.duration == 3 %}selected{% endif %}>3 heures</option>
+                        </select>
+                        {% if form.duration.errors %}
+                        <p class="mt-2 text-sm text-red-600">{{ form.duration.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="sm:col-span-6">
+                    <label for="location" class="block text-sm font-medium text-gray-700">
+                        Lieu
+                    </label>
+                    <div class="mt-1">
+                        <input type="text" name="location" id="location" value="{% if appointment %}{{ appointment.location }}{% endif %}" required 
+                               class="shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 rounded-md" 
+                               placeholder="Adresse ou lieu de rendez-vous">
+                        {% if form.location.errors %}
+                        <p class="mt-2 text-sm text-red-600">{{ form.location.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="sm:col-span-6">
+                    <label for="notes" class="block text-sm font-medium text-gray-700">
+                        Notes
+                    </label>
+                    <div class="mt-1">
+                        <textarea id="notes" name="notes" rows="3" 
+                                 class="shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                                 placeholder="Informations supplémentaires sur ce rendez-vous">{% if appointment %}{{ appointment.notes }}{% endif %}</textarea>
+                        {% if form.notes.errors %}
+                        <p class="mt-2 text-sm text-red-600">{{ form.notes.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            {% if user.user_type == 'student' %}
+            <div class="bg-blue-50 border-l-4 border-blue-400 p-4 mb-6">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <i class="fas fa-info-circle text-blue-400"></i>
+                    </div>
+                    <div class="ml-3">
+                        <p class="text-sm text-blue-700">
+                            Vous disposez actuellement de <strong>{{ user.student_profile.remaining_hours }} heures</strong> restantes.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            
+            <div class="flex justify-between">
+                <a href="{% url 'appointment_list' %}" class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+                    Annuler
+                </a>
+                <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+                    {% if appointment %}Mettre à jour{% else %}Créer le rendez-vous{% endif %}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

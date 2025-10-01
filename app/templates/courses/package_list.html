@@ -1,0 +1,122 @@
+<!-- courses/templates/courses/package_list.html -->
+<!-- Ajout des boutons d'édition et de suppression dans chaque ligne de forfait -->
+
+{% extends 'base.html' %}
+
+{% block title %}Forfaits - My Driving School{% endblock %}
+
+{% block content %}
+<div class="bg-white shadow overflow-hidden sm:rounded-lg">
+    <div class="px-4 py-5 sm:px-6 bg-gradient-to-r from-primary-700 to-primary-800 text-white">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+            <div>
+                <h3 class="text-2xl leading-6 font-medium font-heading">
+                    Forfaits disponibles
+                </h3>
+                <p class="mt-1 max-w-2xl text-sm text-primary-100">
+                    Découvrez nos formules pour l'apprentissage de la conduite.
+                </p>
+            </div>
+            {% if user.user_type in 'secretary,admin' %}
+            <div class="mt-4 md:mt-0">
+                <a href="{% url 'package_create' %}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-primary-700 bg-white hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white">
+                    <i class="fas fa-plus mr-2"></i>
+                    Créer un forfait
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="bg-white">
+        <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+                {% for package in packages %}
+                <div class="border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden hover-lift">
+                    <div class="px-6 py-8 bg-white sm:p-10 sm:pb-6">
+                        <div class="flex justify-between items-center">
+                            <h3 class="inline-flex px-4 py-1 rounded-full text-sm font-semibold tracking-wide uppercase bg-primary-100 text-primary-800" id="tier-standard">
+                                {{ package.name }}
+                            </h3>
+                            
+                            {% if user.user_type in 'secretary,admin' %}
+                            <div class="flex space-x-2">
+                                <a href="{% url 'package_edit' package.id %}" class="text-indigo-600 hover:text-indigo-900" title="Modifier">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <a href="{% url 'package_delete' package.id %}" class="text-red-600 hover:text-red-900" title="Supprimer">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </div>
+                            {% endif %}
+                        </div>
+                        <div class="mt-4 flex items-baseline text-6xl font-bold">
+                            {{ package.price }}<span class="ml-1 text-2xl font-medium text-gray-500">€</span>
+                        </div>
+                        <p class="mt-5 text-lg text-gray-500">
+                            {{ package.hours }} heures de conduite
+                        </p>
+                    </div>
+                    <div class="px-6 pt-6 pb-8 bg-gray-50 sm:p-10 sm:pt-6">
+                        <ul class="space-y-4">
+                            <li class="flex items-start">
+                                <div class="flex-shrink-0">
+                                    <i class="fas fa-check text-green-500"></i>
+                                </div>
+                                <p class="ml-3 text-base text-gray-700">
+                                    {{ package.hours }} heures de cours pratiques
+                                </p>
+                            </li>
+                            <li class="flex items-start">
+                                <div class="flex-shrink-0">
+                                    <i class="fas fa-check text-green-500"></i>
+                                </div>
+                                <p class="ml-3 text-base text-gray-700">
+                                    Suivi personnalisé
+                                </p>
+                            </li>
+                            <li class="flex items-start">
+                                <div class="flex-shrink-0">
+                                    <i class="fas fa-check text-green-500"></i>
+                                </div>
+                                <p class="ml-3 text-base text-gray-700">
+                                    Accès à la plateforme en ligne
+                                </p>
+                            </li>
+                        </ul>
+                        <div class="mt-6">
+                            {% if user.user_type in 'secretary,admin' %}
+                                <a href="{% url 'purchase_package' package.id %}" class="block w-full text-center rounded-md border border-transparent bg-primary-600 px-6 py-4 text-xl font-medium text-white shadow hover:bg-primary-700">
+                                    Acheter pour un élève
+                                </a>
+                            {% elif user.user_type == 'student' %}
+                                <div class="block w-full text-center rounded-md border border-gray-300 bg-gray-100 px-6 py-4 text-xl font-medium text-gray-500">
+                                    Contacter la secrétaire
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="col-span-full text-center py-12">
+                    <p class="text-gray-500">Aucun forfait disponible pour le moment.</p>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <div class="mt-10 bg-blue-50 border-l-4 border-blue-400 p-4">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <i class="fas fa-info-circle text-blue-400"></i>
+                    </div>
+                    <div class="ml-3">
+                        <p class="text-sm text-blue-700">
+                            Pour acheter un forfait ou des heures supplémentaires, veuillez vous adresser à l'accueil de l'auto-école.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
